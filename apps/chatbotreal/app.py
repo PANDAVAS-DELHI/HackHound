@@ -10,7 +10,7 @@ df = pd.read_csv("medicine_dataset.csv")
 # Initialize Flask app
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
-load_dotenv() 
+load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -98,9 +98,8 @@ def start_chat():
     return jsonify({
         "message": "Hello! How may I assist you?",
         "options": [
-            {"text": "Find Medicine Substitute", "value": "substitute"},
             {"text": "Find Doctor Specialist", "value": "specialist"},
-            {"text": "Check Side Effects", "value": "side_effects"}  # Added new button
+            {"text": "Check Side Effects for Medicines", "value": "side_effects"}  # Added new button
         ]
     })
 

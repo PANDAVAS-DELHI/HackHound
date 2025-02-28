@@ -18,7 +18,7 @@ export const Dashboard = () => {
       if (hour < 12) {
         setGreeting("Good Morning 🌅");
       } else if (hour < 18) {
-        setGreeting("Good Afternoon ☀️");
+        setGreeting("Good Afternoon ☀");
       } else {
         setGreeting("Good Evening 🌙");
       }
@@ -26,8 +26,8 @@ export const Dashboard = () => {
 
     const fetchDoctorName = async () => {
       try {
-        const response = await axios.get(
-          `${BACKEND_URL}cms/v1/doctor/prescription/doctorname/${DoctorId}`
+        const response = await axios.get(`
+          ${BACKEND_URL}cms/v1/doctor/prescription/doctorname/${DoctorId}`
         );
         setDoctorName(response.data.name);
       } catch (error) {
@@ -62,8 +62,3 @@ export const Dashboard = () => {
     </div>
   );
 };
-
-
-
-
-

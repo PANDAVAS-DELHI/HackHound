@@ -12,14 +12,13 @@ interface NavbarComponentProps {
 
 export const NavbarComponent: React.FC<NavbarComponentProps> = ({ DoctorId }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const navigate = useNavigate();
 
   const handleViewAnalysis = () => {
     if (!DoctorId) {
       console.error("Doctor ID is not available");
       return;
     }
-    navigate(`/cms/v1/doctor/analysis/${DoctorId}`);
+    window.location.href = `http://localhost:8501/?doctorId=${DoctorId}`;
   };
 
   useEffect(() => {
@@ -70,7 +69,9 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({ DoctorId }) =>
         </div>
 
         {/* Sidebar Menu */}
-        <div className={`fixed top-0 left-0 h-full bg-white shadow-md transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 z-50 w-[250px]`}>
+        <div className={`fixed top-0 left-0 h-full bg-white shadow-md transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 z-50 w-[250px]`}>
           <div className="p-4 flex items-center justify-between border-b border-slate-300">
             <span className="text-lg font-bold text-[#3B9AB8]">Menu</span>
             <button
@@ -82,10 +83,10 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({ DoctorId }) =>
             </button>
           </div>
           <div className="flex flex-col mt-4 space-y-4">
-            <Link to="/records" className={`${defaultStyle} px-6`} onClick={() => setIsSidebarOpen(false)}>Records</Link>
-            <div className={`${defaultStyle} px-6`} onClick={handleViewAnalysis}>View Analysis</div>
-            <Link to="/connect" className={`${defaultStyle} px-6`} onClick={() => setIsSidebarOpen(false)}>Connect</Link>
-            <Link to="/profile" className={`${defaultStyle} px-6`} onClick={() => setIsSidebarOpen(false)}>Profile</Link>
+            <Link to="/records" className={defaultStyle + " px-6"} onClick={() => setIsSidebarOpen(false)}>Records</Link>
+            <div className={defaultStyle + " px-6"} onClick={handleViewAnalysis}>View Analysis</div>
+            <Link to="/connect" className={defaultStyle + " px-6"} onClick={() => setIsSidebarOpen(false)}>Connect</Link>
+            <Link to="/profile" className={defaultStyle + " px-6"} onClick={() => setIsSidebarOpen(false)}>Profile</Link>
             <div className="px-6">
               <Button size="md" variant="primary" title="Logout" onClick={handleLogout} />
             </div>

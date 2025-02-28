@@ -14,11 +14,12 @@ interface PatientDetailsResponse {
     newPatient: Patient;
 }
 
-export const PastprescriptionRecord= () => {
+export const PastprescriptionRecord = () => {
     const { prescriptionId, patientId } = useParams<{ prescriptionId: string; patientId: string }>();
     const [patientDetails, setPatientDetails] = useState<PatientDetailsResponse | null>(null);
     const { medication, isLoading } = usefetchMedicine({ prescriptionId: prescriptionId || "" });
     const [treatmentAdvice, setTreatmentAdvice] = useState<string | null>(null);
+    const [diseases, setDiseases] = useState<string[]>([]);
 
     useEffect(() => {
         const getPatientDetails = async () => {
@@ -40,8 +41,18 @@ export const PastprescriptionRecord= () => {
             }
         };
 
+        const getPatientDiseases = async () => {
+            try {
+                const response = await axios.get(`${BACKEND_URL}cms/v1/doctor/prescription/diseases/${prescriptionId}`);
+                setDiseases(response.data.disease || []);
+            } catch (error) {
+                console.error("Error fetching diseases:", error);
+            }
+        };
+
         getPatientDetails();
         getTreatmentContent();
+        getPatientDiseases();
     }, [patientId, prescriptionId]);
 
     return (
@@ -53,6 +64,18 @@ export const PastprescriptionRecord= () => {
                             You are viewing a prescription of - 
                             <span className="font-bold"> {patientDetails?.newPatient.fullName}</span>
                         </h2>
+                        <div className="mt-2">
+                            <h3 className="text-md font-semibold text-gray-800">Diagnosed Diseases:</h3>
+                            {diseases.length > 0 ? (
+                                <ul className="list-disc list-inside text-gray-600">
+                                    {diseases.map((disease, index) => (
+                                        <li key={index}>{disease}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-gray-500 italic">No diseases recorded.</p>
+                            )}
+                        </div>
                     </div>
 
                     <div className="p-6 border-2 border-[#3B9AB8] rounded-xl shadow-lg mt-4">
@@ -95,8 +118,8 @@ export const PastprescriptionRecord= () => {
                     <div className="p-6 border-2 border-[#3B9AB8] rounded-xl shadow-lg mt-4">
                         <h3 className="text-xl font-semibold text-gray-800 mb-4">Treatment Advice</h3>
                         <div className="p-4 bg-gray-50 rounded-lg text-gray-700">
-    <pre className="whitespace-pre-wrap font-serif">{treatmentAdvice}</pre>
-</div>
+                            <pre className="whitespace-pre-wrap font-serif">{treatmentAdvice}</pre>
+                        </div>
                     </div>
                 </div>
             </div>

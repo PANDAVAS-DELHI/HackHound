@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,9 +132,8 @@ async function startChat() {
     appendMessage("Welcome! How can I assist you today?", "bot");
 
     let options = `
-      <button class="medicine-button" onclick="handleOption('substitute')">Find Medicine Substitute</button>
       <button class="medicine-button" onclick="handleOption('specialist')">Find Doctor Specialist</button>
-      <button class="medicine-button" onclick="handleOption('side_effects')">Check Side Effects</button>
+      <button class="medicine-button" onclick="handleOption('side_effects')">Check Side Effects for Medicines</button>
     `;
 
     appendMessage(options, "bot");
@@ -146,14 +146,11 @@ async function startChat() {
 // Handle option selection
 function handleOption(choice) {
   userChoice = choice;
-  if (choice === "substitute") {
-    appendMessage("You selected: Find Medicine Substitute", "user");
-    appendMessage("Please enter the medicine name.", "bot");
-  } else if (choice === "specialist") {
+  if (choice === "specialist") {
     appendMessage("You selected: Find Doctor Specialist", "user");
     appendMessage("Please enter your symptom or disease.", "bot");
   } else if (choice === "side_effects") {
-    appendMessage("You selected: Check Side Effects", "user");
+    appendMessage("You selected: Check Side Effects for Medicines", "user");
     appendMessage("Please enter the medicine name.", "bot");
   }
 }
@@ -189,8 +186,11 @@ async function fetchSpecialist(query) {
   try {
     const response = await fetch(`/get_specialist?query=${encodeURIComponent(query)}`);
     const data = await response.json();
-    
-    appendMessage(`${data.specialist}`, "bot");
+
+    // Convert **bold text** to <strong>bold text</strong>
+    const formattedResponse = data.specialist.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+    appendMessage(formattedResponse, "bot");
     askForMoreAssistance();
     
   } catch (error) {
@@ -198,6 +198,7 @@ async function fetchSpecialist(query) {
     console.error(error);
   }
 }
+
 
 // Fetch medicine substitutes
 async function fetchMatchingMedicines(query) {
